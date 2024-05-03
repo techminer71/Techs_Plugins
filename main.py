@@ -1,6 +1,6 @@
 import sys
 import requests
-from PySide6.QtWidgets import QApplication, QMainWindow
+from PySide6.QtWidgets import QApplication, QMainWindow, QTableWidgetItem
 from ui_mainwindow import Ui_MainWindow
 
 def parse_plugin_info(plugin_info):
@@ -31,7 +31,7 @@ class MainWindow(QMainWindow):
         headers = {"User-Agent": "MyUserAgent"}
 
         # Construct the request URL with the plugin ID
-        request_url = f"https://api.spiget.org/v2/search/resources/{plugin_name}?field=tag&fields={plugin_id}"
+        request_url = f"https://api.spiget.org/v2/resources/{plugin_id}"
 
         try:
             # Send GET request
@@ -42,16 +42,17 @@ class MainWindow(QMainWindow):
                 # Parse response as JSON
                 data = response.json()
 
-                # Check if the response is a JSON array or object
-                if isinstance(data, list):
-                    # Is JsonArray
-                    print("Response is a JSON array:", data)
-                elif isinstance(data, dict):
-                    # Is JsonObject
-                    print("Response is a JSON object:", data)
+                # Check if the response is a JSON object
+                if isinstance(data, dict):
+                    # Get plugin name from data
+                    plugin_name = data.get('name', '')
+                    
+                    # Add plugin name to the table
+                    row_count = self.ui.Plugin_List.rowCount()
+                    self.ui.Plugin_List.insertRow(row_count)
+                    self.ui.Plugin_List.setItem(row_count, 0, QTableWidgetItem(Plugin_List))
                 else:
-                    # wut?!
-                    print("Unknown JSON format:", data)
+                    print("Unexpected response format:", data)
             else:
                 # Handle unsuccessful request
                 print("Failed to fetch data from Spiget API. Status code:", response.status_code)
