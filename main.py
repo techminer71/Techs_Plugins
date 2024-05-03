@@ -45,12 +45,12 @@ class MainWindow(QMainWindow):
                 # Check if the response is a JSON object
                 if isinstance(data, dict):
                     # Get plugin name from data
-                    plugin_name = data.get('name', '')
-                    
+                    #plugin_name = data.get('name', '')
+                    print(data.get('name', ''))
                     # Add plugin name to the table
                     row_count = self.ui.Plugin_List.rowCount()
                     self.ui.Plugin_List.insertRow(row_count)
-                    self.ui.Plugin_List.setItem(row_count, 0, QTableWidgetItem(Plugin_List))
+                    self.ui.Plugin_List.setItem(row_count, 0, QTableWidgetItem(plugin_name))
                 else:
                     print("Unexpected response format:", data)
             else:
